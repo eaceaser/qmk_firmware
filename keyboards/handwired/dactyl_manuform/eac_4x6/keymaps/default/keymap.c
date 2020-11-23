@@ -25,6 +25,12 @@
 #define LOWER MO(_LOWER)
 #define HYPER MO(_HYPER)
 
+#define ALL_LEDS 0, 14
+#define HSV_GRUVBOX_PURPLE 226, 143, 143
+#define HSV_GRUVBOX_BLUE 128, 125, 135
+#define HSV_GRUVBOX_RED 1, 219, 204
+#define HSV_GRUVBOX_GREEN 43, 212, 153
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_BASE] = LAYOUT( \
@@ -32,17 +38,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_ESC,   KC_A,     KC_S,   KC_D,   KC_F,   KC_G,               KC_H,   KC_J,   KC_K,    KC_L,   KC_SCLN, KC_QUOT,  \
     KC_LSFT,  KC_Z,     KC_X,   KC_C,   KC_V,   KC_B,               KC_N,   KC_M,   KC_COMM, KC_DOT, KC_SLSH, KC_MINUS, \
     KC_GRAVE, KC_EQUAL, KC_HOME,KC_END,                                             KC_PGUP, KC_PGDN,KC_LBRC, KC_RBRC, \
-                                   LOWER, RAISE     ,             KC_ENT, KC_SPC,                                  \
-                                   KC_LCTRL, KC_LALT,             KC_BSPC, KC_PGUP,                               \
-                                     KC_LGUI, KC_NO,              KC_PGUP, KC_PGDN                                 \
+                                   LOWER, RAISE     ,               KC_ENT, KC_SPC,                                  \
+                                   KC_LCTRL, KC_LALT,               KC_BSPC, KC_PGUP,                               \
+                                      KC_LGUI, KC_NO,               KC_PGUP, KC_PGDN                                 \
 ),
 
 
 [_LOWER] = LAYOUT(
     _______,_______,_______,_______,_______,_______,            _______, KC_P7, KC_P8,  KC_P9,  RESET,  KC_MUTE,   \
     _______,KC_HOME,KC_PGUP,KC_PGDN,KC_END ,KC_LPRN,            KC_RPRN, KC_P4, KC_P5,  KC_P6,  KC_MINS,KC_VOLU,   \
-    _______,_______,_______,_______,_______,_______,            _______, KC_P1, KC_P2,  KC_P3,  KC_EQL, KC_VOLD,   \
-    _______,_______,RGB_VAI,RGB_TOG,                                            _______,_______,_______,_______,   \
+    _______,_______,_______,_______,_______,_______,            NK_TOGG, KC_P1, KC_P2,  KC_P3,  KC_EQL, KC_VOLD,   \
+    _______,RGB_M_B,RGB_VAI,RGB_TOG,                                            _______,_______,_______,_______,   \
                                             _______,HYPER,      _______, KC_P0,                                    \
                                             _______,_______,    _______,_______,                                   \
                                             _______,_______,    _______,_______                                    \
@@ -69,6 +75,39 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 )
 };
 
+#ifdef RGBLIGHT_LAYERS
+const rgblight_segment_t PROGMEM base_layer_rgb[] = RGBLIGHT_LAYER_SEGMENTS(
+    {ALL_LEDS, HSV_GRUVBOX_PURPLE}
+);
+
+const rgblight_segment_t PROGMEM raise_layer_rgb[] = RGBLIGHT_LAYER_SEGMENTS(
+    {ALL_LEDS, HSV_GRUVBOX_BLUE}
+);
+
+const rgblight_segment_t PROGMEM lower_layer_rgb[] = RGBLIGHT_LAYER_SEGMENTS(
+    {ALL_LEDS, HSV_GRUVBOX_RED}
+);
+
+const rgblight_segment_t PROGMEM hyper_layer_rgb[] = RGBLIGHT_LAYER_SEGMENTS(
+    {ALL_LEDS, HSV_GRUVBOX_GREEN}
+);
+
+const rgblight_segment_t* const PROGMEM my_rgb_layers[] = RGBLIGHT_LAYERS_LIST(
+    base_layer_rgb,
+    lower_layer_rgb,
+    raise_layer_rgb,
+    hyper_layer_rgb
+);
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+  rgblight_set_layer_state(0, layer_state_cmp(state, _BASE));
+  rgblight_set_layer_state(1, layer_state_cmp(state, _LOWER));
+  rgblight_set_layer_state(2, layer_state_cmp(state, _RAISE));
+  rgblight_set_layer_state(3, layer_state_cmp(state, _HYPER));
+  //rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING+3);
+  return state;
+}
+#endif
 
 void persistent_default_layer_set(uint16_t default_layer) {
   eeconfig_update_default_layer(default_layer);
@@ -76,5 +115,17 @@ void persistent_default_layer_set(uint16_t default_layer) {
 }
 
 void keyboard_post_init_user(void) {
-  rgblight_sethsv_noeeprom(226, 143, 143);
+  rgblight_enable_noeeprom();
+  //rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING);
+#ifdef RGBLIGHT_LAYERS
+  rgblight_layers = my_rgb_layers;
+#endif
+}
+
+void suspend_power_down_user(void) {
+  //rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING);
+}
+
+void suspend_wakeup_init_user(void) {
+  //rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
 }

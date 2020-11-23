@@ -42,8 +42,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define RGBLED_NUM 12
 
 /* rgbs */
-#define RGB_DI_PIN F0
+#define RGB_DI_PIN C7
 #define RGBLED_NUM 14
 #define RGBLIGHT_SPLIT
 #define RGBLED_SPLIT {7, 7}
+#define RGBLIGHT_EFFECT_BREATHING
+#define RGBLIGHT_EFFECT_BREATHE_CENTER 1
+#define RGBLIGHT_LAYERS
+
+//#define RGBLIGHT_SLEEP
+//#define RGBLIGHT_EFFECT_STATIC_GRADIENT
+//#define RGBLIGHT_EFFECT_KNIGHT
 //#define RGBLIGHT_MODE_BREATHING 1
