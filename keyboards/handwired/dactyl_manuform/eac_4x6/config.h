@@ -34,12 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_ROW_PINS { F7, B1, B3, B2, B6 }
 #define MATRIX_COL_PINS { D4, C6, D7, E6, B4, B5 }
 
+
 /* COL2ROW or ROW2COL */
 #define DIODE_DIRECTION COL2ROW
-
-// WS2812 RGB LED strip input and number of LEDs
-// #define RGB_DI_PIN D3
-// #define RGBLED_NUM 12
 
 /* rgbs */
 #define RGB_DI_PIN C7
@@ -54,3 +51,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define RGBLIGHT_EFFECT_STATIC_GRADIENT
 //#define RGBLIGHT_EFFECT_KNIGHT
 //#define RGBLIGHT_MODE_BREATHING 1
+//
+// split
+#define USE_SERIAL
+//#define SPLIT_USB_DETECT
+//#define SPLIT_USB_TIMEOUT 2500
+#undef SOFT_SERIAL_PIN
+#define SOFT_SERIAL_PIN D1
