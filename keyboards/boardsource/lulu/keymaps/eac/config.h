@@ -1,0 +1,2 @@
+#define EE_HANDS
+#undef ENCODER_ENABLE
